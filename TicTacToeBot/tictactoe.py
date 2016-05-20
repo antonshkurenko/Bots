@@ -36,30 +36,45 @@ def init():
     first_bot = random.choice([True, False])
 
 
-def draw():
+def draw(tweet_callback):
 
     print('draw')
 
     print('row:' + str(row))
     print('col:' + str(col))
 
+    tweet_text = ''
+
     for i in range(0, SIZE):
         for j in range(0, SIZE):
 
             if deck[i][j] == SPACE:
                 # set char space
-                print('.', end='')
+                space_symbol = '•'
+                print(space_symbol, end='')
+                tweet_text += space_symbol
                 pass
             elif deck[i][j] == X:
                 # set char X
-                print('X', end='')
+                x_symbol = '×'
+                print(x_symbol, end='')
+                tweet_text += x_symbol
                 pass
             elif deck[i][j] == O:
                 # set char O
-                print('O', end='')
+                o_symbol = '○'
+                print(o_symbol, end='')
+                tweet_text += o_symbol
                 pass
+
+            if j != SIZE - 1:
+                print('|', end='')
+                tweet_text += '|'
+
         print()
+        tweet_text += '\n'
         # set \n
+    tweet_callback(tweet_text)
 
 
 def step(x, y):
@@ -163,7 +178,7 @@ def computer_step():
     return win is not None
 
 
-def start():
+def start(tweet_callback):
 
     print('start')
 
@@ -178,7 +193,7 @@ def start():
             print('second computer step')
             win = computer_step()  # second computer step
 
-        draw()
+        draw(tweet_callback)
 
         if win:
             if first_bot:
@@ -200,5 +215,5 @@ def start():
             first_bot = not first_bot
 
         print('*** End of the step ***')
-        time.sleep(0.25)
+        time.sleep(5)
 

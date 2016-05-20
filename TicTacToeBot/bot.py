@@ -28,5 +28,4 @@ def tweet(text):
 
 if __name__ == '__main__':
     print('Hello, world!')
-    # tweet('Test')
-    start()
+    start(tweet)
