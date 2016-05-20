@@ -2,7 +2,7 @@ import tweepy
 import random
 import time as main_time  # do smth with two same imports
 from datetime import datetime, time
-from .keys import *
+from keys import *
 
 # ====== Constants =============================================
 
@@ -69,6 +69,6 @@ def tweet(text):
             print(str(e))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     tweet_text = create_tweet()
     tweet(tweet_text)

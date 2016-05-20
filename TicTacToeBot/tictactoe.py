@@ -10,23 +10,21 @@ ROW = 'row'
 COL = 'col'
 DIAG = 'diag'
 ANTI_DIAG = 'antidiag'
-deck = [[0 for i in range(SIZE)] for i in range(SIZE)]
+deck = [[0 for _ in range(SIZE)] for _ in range(SIZE)]
 
-row = []  # SIZE
-col = []  # SIZE
+row = [0 for _ in range(SIZE)]  # SIZE
+col = [0 for _ in range(SIZE)]  # SIZE
 diag = 0
 anti_diag = 0
 
 first_bot = False
+selected = 0, 0
 
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-selected = Point(0, 0)
 
 def init():
+
+    print('init')
+
     for i in range(0, SIZE):
         row[i] = 0
         col[i] = 0
@@ -38,23 +36,31 @@ def init():
 
 
 def draw():
+
+    print('draw')
+
     for i in range(0, SIZE):
         for j in range(0, SIZE):
 
             if deck[i][j] == SPACE:
                 # set char space
+                print('.', end='')
                 pass
             elif deck[i][j] == X:
                 # set char X
+                print('X', end='')
                 pass
             elif deck[i][j] == O:
                 # set char O
+                print('O', end='')
                 pass
-
-                # set \n
+        print()
+        # set \n
 
 
 def step(x, y):
+
+    print('step')
 
     inc = 1 if first_bot else -1
 
@@ -70,6 +76,8 @@ def step(x, y):
 
 
 def check_sequence(x, y, length):
+
+    print('check sequence')
 
     if row[y] == length or row[y] == -length:
         return ROW, y
@@ -88,6 +96,8 @@ def check_sequence(x, y, length):
 
 def get_space_coords():
 
+    print('get space coords')
+
     point = None
 
     for i in range(0, SIZE):
@@ -96,28 +106,30 @@ def get_space_coords():
                 flag = random.randint(0, 2)  # [0,2] -> 0,1,2
 
                 if point is None or not flag:
-                    point = Point(i, j)
+                    point = i, j
 
     return point  # if it's none -> no free space on the deck
 
 
 def get_step_point():
 
+    print('get step point')
+
     for i in range(0, SIZE):
         if abs(row[i]) == SIZE - 1:
             for j in range(0, SIZE):
                 if deck[j][i] == SPACE:
-                    return Point(j, i)
+                    return j, i
 
         if abs(col[i]) == SIZE - 1:
             for j in range(0, SIZE):
                 if deck[i][j] == SPACE:
-                    return Point(i, j)
+                    return i, j
 
     if abs(diag) == SIZE - 1:
         for i in range(0, SIZE):
             if deck[i][i] == SPACE:
-                return Point(i, i)
+                return i, i
 
     if abs(anti_diag) == SIZE - 1:
         i = 0
@@ -125,7 +137,7 @@ def get_step_point():
         while i < SIZE and j >= 0:
 
             if deck[i][j] == SPACE:
-                return Point(i, j)
+                return i, j
 
             i += 1
             j -= 1
@@ -135,35 +147,49 @@ def get_step_point():
 
 def computer_step():
 
+    print('computer_step')
+
     step_point = get_step_point()
 
-    deck[step_point.x][step_point.y] = 0
-    step(step_point.x, step_point.y)
+    deck[step_point[0]][step_point[1]] = 0
+    step(step_point[0], step_point[1])
 
-    win = check_sequence(step_point.x, step_point.y, SIZE)
+    win = check_sequence(step_point[0], step_point[1], SIZE)
 
     return win is not None
 
 
 def start():
 
+    print('start')
+
+    init()
+
     while True:
+
         if first_bot:
+            print('first computer step')
             win = computer_step()  # first computer step
         else:
+            print('second computer step')
             win = computer_step()  # second computer step
+
+        draw()
 
         if win:
             if first_bot:
                 # first bot won
+                print('first computer won')
                 pass
             else:
                 # second bot won
+                print('second computer won')
                 pass
             break
         else:
             if get_space_coords() is None:
                 # draw
+                print('draw')
                 break
 
             global first_bot

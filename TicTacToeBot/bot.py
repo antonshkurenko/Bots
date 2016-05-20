@@ -1,7 +1,6 @@
 import tweepy
-import random
-import time
-from .keys import *
+from keys import *
+from tictactoe import *
 
 # ====== Constants =============================================
 
@@ -12,8 +11,6 @@ MY_ID = '248120243'
 
 bot_username = 'BotTicTacToe'
 
-def create_tweet():
-    pass
 
 def tweet(text):
     auth = tweepy.OAuthHandler(C_KEY, C_SECRET)
@@ -21,7 +18,7 @@ def tweet(text):
     api = tweepy.API(auth)
 
     try:
-        api.update_status('text')
+        api.update_status(text)
     except tweepy.error.TweepError as e:
         if e.api_code == 187:
             tweet(text)
@@ -29,6 +26,7 @@ def tweet(text):
             print(e)
 
 
-if __name__ == "__main__":
-    tweet_text = create_tweet()
-    tweet(tweet_text)
+if __name__ == '__main__':
+    print('Hello, world!')
+    # tweet('Test')
+    start()
