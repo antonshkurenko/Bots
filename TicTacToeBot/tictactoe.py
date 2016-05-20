@@ -50,7 +50,7 @@ def draw(tweet_callback):
 
             if deck[i][j] == SPACE:
                 # set char space
-                space_symbol = '•'
+                space_symbol = '−'
                 print(space_symbol, end='')
                 tweet_text += space_symbol
                 pass
