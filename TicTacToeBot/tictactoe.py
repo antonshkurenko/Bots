@@ -21,9 +21,19 @@ anti_diag = 0
 first_bot = False
 selected = 0, 0
 
+streak_strings = {
+    3: 'Killing Spree!',
+    4: 'Dominating!',
+    5: 'Mega Kill!',
+    6: 'Unstoppable!',
+    7: 'Wicked Sick!',
+    8: 'Monster Kill!',
+    9: 'Godlike!',
+    10: 'Beyond Godlike!'
+}
+
 
 def init():
-
     print('init')
 
     for i in range(0, SIZE):
@@ -37,7 +47,6 @@ def init():
 
 
 def draw(tweet_callback):
-
     print('draw')
 
     print('row:' + str(row))
@@ -78,7 +87,6 @@ def draw(tweet_callback):
 
 
 def step(x, y):
-
     print('step')
 
     inc = 1 if first_bot else -1
@@ -95,7 +103,6 @@ def step(x, y):
 
 
 def check_sequence(x, y, length):
-
     print('check sequence')
 
     if row[y] == length or row[y] == -length:
@@ -114,7 +121,6 @@ def check_sequence(x, y, length):
 
 
 def get_space_coords():
-
     print('get space coords')
 
     point = None
@@ -131,7 +137,6 @@ def get_space_coords():
 
 
 def get_step_point():
-
     print('get step point')
 
     for i in range(0, SIZE):
@@ -165,7 +170,6 @@ def get_step_point():
 
 
 def computer_step():
-
     print('computer_step')
 
     step_point = get_step_point()
@@ -179,10 +183,25 @@ def computer_step():
 
 
 def start(tweet_callback):
-
     print('start')
 
     init()
+
+    lines = [line.rstrip('\n') for line in open('result.txt', 'r')]
+
+    # line 0 -> total rounds
+    # line 1 -> O wins
+    # line 2 -> X wins
+    # line 3 -> draws
+    # line 4 -> O streak
+    # line 5 -> X streak
+    # line 6 -> draw streak
+
+    if len(lines) != 7:
+        lines = [0 for _ in range(7)]
+
+    start_round_string = 'Round %d: FIGHT!'
+    tweet_callback(start_round_string % int(lines[0]))
 
     while True:
 
@@ -199,16 +218,17 @@ def start(tweet_callback):
             if first_bot:
                 # first bot won
                 print('first computer won')
-                pass
+                result = O
             else:
                 # second bot won
                 print('second computer won')
-                pass
+                result = X
             break
         else:
             if get_space_coords() is None:
                 # draw
                 print('draw')
+                result = SPACE
                 break
 
             global first_bot
@@ -217,3 +237,56 @@ def start(tweet_callback):
         print('*** End of the step ***')
         time.sleep(5)
 
+    if result == O:
+        lines[1] = int(lines[1]) + 1
+        lines[5] = 0
+        lines[6] = 0
+        lines[4] = int(lines[4]) + 1
+
+        final_tweet = 'O won!\n'
+
+        win_streak = int(lines[4])
+        if win_streak >= 3:
+            streak = streak_strings.get(win_streak, 'Beyond Godlike!')
+            final_tweet += streak + '\n'
+
+    elif result == X:
+        lines[2] = int(lines[2]) + 1
+        lines[4] = 0
+        lines[6] = 0
+        lines[5] = int(lines[5]) + 1
+
+        final_tweet = 'X won!\n'
+
+        win_streak = int(lines[5])
+        if win_streak >= 3:
+            streak = streak_strings.get(win_streak, 'Beyond Godlike!')
+            final_tweet += streak + '\n'
+
+    elif result == SPACE:
+        lines[3] = int(lines[3]) + 1
+        lines[4] = 0
+        lines[5] = 0
+        lines[6] = int(lines[6]) + 1
+
+        final_tweet = 'Draw!\n'
+
+    final_tweet += 'O wins: %d\n' \
+                   'X wins: %d\n' \
+                   'Draws: %d\n' \
+                   'O streak: %d\n' \
+                   'X streak: %d\n' \
+                   'Draw streak: %d' % \
+                   int(lines[1]), \
+                   int(lines[2]), \
+                   int(lines[3]), \
+                   int(lines[4]), \
+                   int(lines[5]), \
+                   int(lines[6])
+
+    file = open('result.txt', 'w')
+    for item in lines:
+        file.write("%s\n" % item)
+
+    print(final_tweet)
+    tweet_callback(final_tweet)
