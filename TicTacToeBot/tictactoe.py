@@ -1,4 +1,5 @@
 import random
+import time
 
 X = 1
 O = -1
@@ -151,8 +152,7 @@ def computer_step():
 
     step_point = get_step_point()
 
-    deck[step_point[0]][step_point[1]] = 0
-    step(step_point[0], step_point[1])
+    deck[step_point[0]][step_point[1]] = O if first_bot else X
 
     win = check_sequence(step_point[0], step_point[1], SIZE)
 
@@ -194,3 +194,7 @@ def start():
 
             global first_bot
             first_bot = not first_bot
+
+        time.sleep(5)
+        print('****** NEXT ******')
+
