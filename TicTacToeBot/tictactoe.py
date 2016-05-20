@@ -40,6 +40,9 @@ def draw():
 
     print('draw')
 
+    print('row:' + str(row))
+    print('col:' + str(col))
+
     for i in range(0, SIZE):
         for j in range(0, SIZE):
 
@@ -153,6 +156,7 @@ def computer_step():
     step_point = get_step_point()
 
     deck[step_point[0]][step_point[1]] = O if first_bot else X
+    step(step_point[0], step_point[1])
 
     win = check_sequence(step_point[0], step_point[1], SIZE)
 
@@ -195,6 +199,6 @@ def start():
             global first_bot
             first_bot = not first_bot
 
-        time.sleep(5)
-        print('****** NEXT ******')
+        print('*** End of the step ***')
+        time.sleep(0.25)
 
