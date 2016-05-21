@@ -128,7 +128,7 @@ def get_space_coords():
     for i in range(0, SIZE):
         for j in range(0, SIZE):
             if deck[i][j] == SPACE:
-                flag = random.randint(0, 2)  # [0,2] -> 0,1,2
+                flag = random.randint(0, 3)  # [0,3] -> 0,1,2,3 -> 25%
 
                 if point is None or not flag:
                     point = i, j
@@ -197,10 +197,10 @@ def start(tweet_callback):
     # line 5 -> X streak
     # line 6 -> draw streak
 
-    if len(lines) != 7:
-        lines = [0 for _ in range(7)]
+    print(lines)
 
     start_round_string = 'Round %d: FIGHT!'
+    lines[0] = int(lines[0]) + 1
     tweet_callback(start_round_string % int(lines[0]))
 
     while True:
@@ -277,12 +277,12 @@ def start(tweet_callback):
                    'O streak: %d\n' \
                    'X streak: %d\n' \
                    'Draw streak: %d' % \
-                   int(lines[1]), \
-                   int(lines[2]), \
-                   int(lines[3]), \
-                   int(lines[4]), \
-                   int(lines[5]), \
-                   int(lines[6])
+                   (int(lines[1]),
+                    int(lines[2]),
+                    int(lines[3]),
+                    int(lines[4]),
+                    int(lines[5]),
+                    int(lines[6]))
 
     file = open('result.txt', 'w')
     for item in lines:
