@@ -187,6 +187,7 @@ def start(tweet_callback):
 
     init()
 
+    # for crontab -e, use full path to result.txt on server
     lines = [line.rstrip('\n') for line in open('result.txt', 'r')]
 
     # line 0 -> total rounds
@@ -284,6 +285,7 @@ def start(tweet_callback):
                     int(lines[5]),
                     int(lines[6]))
 
+    # for crontab -e, use full path to result.txt on server
     file = open('result.txt', 'w')
     for item in lines:
         file.write("%s\n" % item)
