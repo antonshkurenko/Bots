@@ -30,7 +30,7 @@ def create_tweet():
     now_time = now.time()
 
     print(now_time.hour)
-    if time(23) <= now_time or now_time < time(8):
+    if time(21) <= now_time or now_time < time(8):
         return random.choice(good_night)
     elif time(8) <= now_time < time(12):
         return random.choice(good_morning)
