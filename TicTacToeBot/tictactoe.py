@@ -60,19 +60,19 @@ def draw(tweet_callback):
             if deck[i][j] == SPACE:
                 # set char space
                 space_symbol = '−'
-                print(space_symbol, end='')
+                # print(space_symbol, end='')
                 tweet_text += space_symbol
                 pass
             elif deck[i][j] == X:
                 # set char X
                 x_symbol = '×'
-                print(x_symbol, end='')
+                # print(x_symbol, end='')
                 tweet_text += x_symbol
                 pass
             elif deck[i][j] == O:
                 # set char O
                 o_symbol = '○'
-                print(o_symbol, end='')
+                # print(o_symbol, end='')
                 tweet_text += o_symbol
                 pass
 
@@ -80,14 +80,14 @@ def draw(tweet_callback):
                 print('|', end='')
                 tweet_text += '|'
 
-        print()
+        # print()
         tweet_text += '\n'
         # set \n
     tweet_callback(tweet_text)
 
 
 def step(x, y):
-    print('step')
+    # print('step')
 
     inc = 1 if first_bot else -1
 
@@ -103,7 +103,7 @@ def step(x, y):
 
 
 def check_sequence(x, y, length):
-    print('check sequence')
+    # print('check sequence')
 
     if row[y] == length or row[y] == -length:
         return ROW, y
@@ -121,7 +121,7 @@ def check_sequence(x, y, length):
 
 
 def get_space_coords():
-    print('get space coords')
+    # print('get space coords')
 
     point = None
 
@@ -137,7 +137,7 @@ def get_space_coords():
 
 
 def get_step_point():
-    print('get step point')
+    # print('get step point')
 
     for i in range(0, SIZE):
         if abs(row[i]) == SIZE - 1:
@@ -170,7 +170,7 @@ def get_step_point():
 
 
 def computer_step():
-    print('computer_step')
+    # print('computer_step')
 
     step_point = get_step_point()
 
@@ -183,11 +183,10 @@ def computer_step():
 
 
 def start(tweet_callback):
-    print('start')
+    # print('start')
 
     init()
 
-    # for crontab -e, use full path to result.txt on server
     lines = [line.rstrip('\n') for line in open('result.txt', 'r')]
 
     # line 0 -> total rounds
@@ -198,7 +197,7 @@ def start(tweet_callback):
     # line 5 -> X streak
     # line 6 -> draw streak
 
-    print(lines)
+    # print(lines)
 
     start_round_string = 'Round %d: FIGHT!'
     lines[0] = int(lines[0]) + 1
@@ -207,10 +206,10 @@ def start(tweet_callback):
     while True:
 
         if first_bot:
-            print('first computer step')
+            # print('first computer step')
             win = computer_step()  # first computer step
         else:
-            print('second computer step')
+            # print('second computer step')
             win = computer_step()  # second computer step
 
         draw(tweet_callback)
@@ -218,17 +217,17 @@ def start(tweet_callback):
         if win:
             if first_bot:
                 # first bot won
-                print('first computer won')
+                # print('first computer won')
                 result = O
             else:
                 # second bot won
-                print('second computer won')
+                # print('second computer won')
                 result = X
             break
         else:
             if get_space_coords() is None:
                 # draw
-                print('draw')
+                # print('draw')
                 result = SPACE
                 break
 
@@ -285,10 +284,9 @@ def start(tweet_callback):
                     int(lines[5]),
                     int(lines[6]))
 
-    # for crontab -e, use full path to result.txt on server
     file = open('result.txt', 'w')
     for item in lines:
         file.write("%s\n" % item)
 
-    print(final_tweet)
+    # print(final_tweet)
     tweet_callback(final_tweet)
