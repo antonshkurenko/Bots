@@ -7,3 +7,7 @@ Everyday at 9 a.m., 1 p.m. and 10 p.m. he chooses random follower of [my account
 #### 2) TicTacToe Bot ([link](https://twitter.com/BotTicTacToe)):
 
 Everyday from 9:15 a.m. to 6:15 p.m. he plays TicTacToe against himself
+
+#### 3) Kyiv Weather Bot ([link](https://twitter.com/kyivweatherbot)):
+
+Everyday, every hour he shows weather in Kyiv for the next hour
