@@ -23,12 +23,13 @@ SURPRISE_CHANCE = 0.2
 
 BOT_USERNAME = 'kyivweatherbot'
 
+
 # ====== Weather icon to emoji map =============================
 
 
 def is_surprise():
     """Util function, needs for emoji."""
-    return random.random < SURPRISE_CHANCE
+    return random.random() < SURPRISE_CHANCE
 
 
 THERMOMETER_EMOJI = u'\U0001F321'
@@ -115,7 +116,6 @@ def current_hour_and_minute():
 
 
 def get_state(sunrise, sunset, current):
-
     sunrise_hour = int(sunrise['hour'])
     sunset_hour = int(sunset['hour'])
 
@@ -145,7 +145,6 @@ def emoji_for(icon, state, moon_phase):
     elif state == STATE_NIGHT:
         if is_surprise():
             emoji += NIGHT_WITH_STARTS_EMOJI
-
 
     return emoji
 
