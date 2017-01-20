@@ -161,7 +161,7 @@ def create_tweet():
 
     first_hour_forecast = hourly_forecast[0]
 
-    print(first_hour_forecast)
+    #print(first_hour_forecast)
 
     time = first_hour_forecast['FCTTIME']['civil']
 
