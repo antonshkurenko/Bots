@@ -131,11 +131,7 @@ def get_state(sunrise, sunset, current):
 
 def emoji_for(icon, state, moon_phase):
 
-    print('Icon %s, state %s, moon_phase %s', (icon, state, moon_phase))
-
     emoji = WEATHER_ICON_TO_EMOJI_MAP[icon]
-
-    print(emoji)
 
     if emoji == 'clear':
         if state == STATE_DAY:
@@ -150,8 +146,6 @@ def emoji_for(icon, state, moon_phase):
     elif state == STATE_NIGHT:
         if is_surprise():
             emoji += NIGHT_WITH_STARTS_EMOJI
-
-    print(emoji)
 
     return emoji
 
@@ -170,8 +164,6 @@ def create_tweet():
     hourly_forecast = parsed_json['hourly_forecast']
 
     first_hour_forecast = hourly_forecast[0]
-
-    print(first_hour_forecast)
 
     temp = first_hour_forecast['temp']['metric']
     feels_like = first_hour_forecast['feelslike']['metric']
@@ -194,8 +186,6 @@ def create_tweet():
 
     final_tweet = "%s: %s°C, %s: %s%%, %s %s°C, %s" % \
                   (THERMOMETER_EMOJI, temp, DROPLET_EMOJI, humidity, "feels like", feels_like, emoji)
-
-    print(final_tweet)
 
     return final_tweet
 
