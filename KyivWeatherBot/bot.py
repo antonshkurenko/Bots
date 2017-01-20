@@ -75,9 +75,9 @@ SUNSET_EMOJI = u'\U0001F307'
 
 WEATHER_ICON_TO_EMOJI_MAP = {
     'chanceflurries': QUESTION_EMOJI + SNOW_EMOJI + TORNADO_EMOJI,
-    'chancerain': QUESTION_EMOJI + RAIN_EMOJI + random.choice(RAIN_SURPRISES) if is_surprise() else EMPTY_STRING,
+    'chancerain': QUESTION_EMOJI + RAIN_EMOJI + (random.choice(RAIN_SURPRISES) if is_surprise() else EMPTY_STRING),
     'chancesleet': QUESTION_EMOJI + SNOW_EMOJI + RAIN_EMOJI,
-    'chancesnow': QUESTION_EMOJI + SNOW_EMOJI + random.choice(SNOW_SURPRISES) if is_surprise() else EMPTY_STRING,
+    'chancesnow': QUESTION_EMOJI + SNOW_EMOJI + (random.choice(SNOW_SURPRISES) if is_surprise() else EMPTY_STRING),
     'chancetstorms': QUESTION_EMOJI + RAIN_AND_STORM_EMOJI,
     'clear': 'clear',  # check if it's night -> moon, day -> sun
     'cloudy': CLOUD_EMOJI,
@@ -89,8 +89,8 @@ WEATHER_ICON_TO_EMOJI_MAP = {
     'partlycloudy': BIG_SUN_SMALL_CLOUD,
     'partlysunny': SMALL_SUN_BIG_CLOUD,
     'sleet': SNOW_EMOJI + RAIN_EMOJI,
-    'rain': RAIN_EMOJI + random.choice(RAIN_SURPRISES) if is_surprise() else EMPTY_STRING,
-    'snow': SNOW_EMOJI + random.choice(SNOW_SURPRISES) if is_surprise() else EMPTY_STRING,
+    'rain': RAIN_EMOJI + (random.choice(RAIN_SURPRISES) if is_surprise() else EMPTY_STRING),
+    'snow': SNOW_EMOJI + (random.choice(SNOW_SURPRISES) if is_surprise() else EMPTY_STRING),
     'sunny': SUN_EMOJI,
     'tstorms': RAIN_AND_STORM_EMOJI,
     'unknown': QUESTION_EMOJI + QUESTION_EMOJI + QUESTION_EMOJI,
@@ -130,7 +130,12 @@ def get_state(sunrise, sunset, current):
 
 
 def emoji_for(icon, state, moon_phase):
+
+    print('Icon %s, state %s, moon_phase %s', (icon, state, moon_phase))
+
     emoji = WEATHER_ICON_TO_EMOJI_MAP[icon]
+
+    print(emoji)
 
     if emoji == 'clear':
         if state == STATE_DAY:
@@ -145,6 +150,8 @@ def emoji_for(icon, state, moon_phase):
     elif state == STATE_NIGHT:
         if is_surprise():
             emoji += NIGHT_WITH_STARTS_EMOJI
+
+    print(emoji)
 
     return emoji
 
@@ -163,6 +170,8 @@ def create_tweet():
     hourly_forecast = parsed_json['hourly_forecast']
 
     first_hour_forecast = hourly_forecast[0]
+
+    print(first_hour_forecast)
 
     temp = first_hour_forecast['temp']['metric']
     feels_like = first_hour_forecast['feelslike']['metric']
