@@ -1,6 +1,6 @@
 import tweepy
 from keys import *
-import urllib.request
+import requests
 import json
 import datetime
 import random
@@ -151,11 +151,7 @@ def emoji_for(icon, state, moon_phase):
 
 
 def download_json(url):
-    f = urllib.request.urlopen(url)
-    json_string = f.read().decode('utf-8')
-    parsed_json = json.loads(json_string)
-    f.close()
-    return parsed_json
+    return requests.get(url).json()
 
 
 def create_tweet():
@@ -186,6 +182,8 @@ def create_tweet():
 
     final_tweet = "%s: %s°C, %s: %s%%, %s %s°C, %s" % \
                   (THERMOMETER_EMOJI, temp, DROPLET_EMOJI, humidity, "feels like", feels_like, emoji)
+
+    print(final_tweet)
 
     return final_tweet
 
