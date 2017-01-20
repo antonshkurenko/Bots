@@ -161,6 +161,10 @@ def create_tweet():
 
     first_hour_forecast = hourly_forecast[0]
 
+    print(first_hour_forecast)
+
+    time = first_hour_forecast['FCTTIME']['civil']
+
     temp = first_hour_forecast['temp']['metric']
     feels_like = first_hour_forecast['feelslike']['metric']
     humidity = first_hour_forecast['humidity']
@@ -180,10 +184,10 @@ def create_tweet():
 
     emoji = emoji_for(icon, state, moon_phase)
 
-    final_tweet = "%s: %s°C, %s: %s%%, %s %s°C, %s" % \
-                  (THERMOMETER_EMOJI, temp, DROPLET_EMOJI, humidity, "feels like", feels_like, emoji)
+    final_tweet = "[%s] %s: %s°C, %s: %s%%, %s %s°C, %s" % \
+                  (time, THERMOMETER_EMOJI, temp, DROPLET_EMOJI, humidity, "feels like", feels_like, emoji)
 
-    print(final_tweet)
+    #print(final_tweet)
 
     return final_tweet
 
