@@ -63,8 +63,6 @@ class GameOfLifeEngine:
 
         file.write('%s %s\n' % (self.width, self.height))
 
-        # todo write actual result and history
-
         write_matrix_to_file(file, self.map)
 
         limit = min(GameOfLifeEngine.HISTORY_LIMIT, len(self.history))
