@@ -14,4 +14,4 @@ class GameOfLifeEngine:
         self.renderer = renderer
 
     def step(self):
-        self.renderer.save_state('temp', self.map)
+        self.renderer.save_state('temp', self)

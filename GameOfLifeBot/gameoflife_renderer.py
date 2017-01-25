@@ -37,19 +37,16 @@ class GameOfLifeRenderer:
         for y in range(0, size[1], self.cell_size + 1):
             canvas.line((0, y, size[0], y), fill=self.color_border, width=self.border_width)
 
-    def save_state(self, filename, state):
+    def save_state(self, filename, engine):
 
-        height_in_cells = len(state)
-        width_in_cells = len(state[0])  # hope all lines have equal sizes
-
-        image_width = width_in_cells * self.cell_size + self.border_width * (width_in_cells + 1)
-        image_height = height_in_cells * self.cell_size + self.border_width * (height_in_cells + 1)
+        image_width = engine.width * self.cell_size + self.border_width * (engine.width + 1)
+        image_height = engine.height * self.cell_size + self.border_width * (engine.height + 1)
 
         im = Image.new(mode='RGB', size=(image_width, image_height), color=self.color_empty)
 
         canvas = ImageDraw.Draw(im)
 
         self.__draw_grid(canvas, im.size)
-        self.__draw(canvas, state)
+        self.__draw(canvas, engine.map)
 
         im.save("%s.png" % filename, "PNG")
