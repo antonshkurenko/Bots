@@ -4,7 +4,8 @@ from gameoflife_renderer import GameOfLifeRenderer
 
 
 def main():
-    gof = GameOfLifeEngine(10, 10, GameOfLifeRenderer())
+    gof = GameOfLifeEngine(GameOfLifeRenderer(), filename='temp_file.txt')
+    print(gof.__dict__)
     gof.step()
 
 

@@ -37,7 +37,7 @@ class GameOfLifeRenderer:
         for y in range(0, size[1], self.cell_size + 1):
             canvas.line((0, y, size[0], y), fill=self.color_border, width=self.border_width)
 
-    def save_state(self, filename, engine):
+    def draw_state(self, filename, engine):
 
         image_width = engine.width * self.cell_size + self.border_width * (engine.width + 1)
         image_height = engine.height * self.cell_size + self.border_width * (engine.height + 1)
