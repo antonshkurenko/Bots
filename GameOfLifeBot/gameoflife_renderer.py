@@ -22,8 +22,8 @@ class GameOfLifeRenderer:
                 if life_state[i][j] == GameOfLifeEngine.CELL_DEAD:
                     pass
                 elif life_state[i][j] == GameOfLifeEngine.CELL_ALIVE:
-                    x = i * self.cell_plus_border
-                    y = j * self.cell_plus_border
+                    y = i * self.cell_plus_border
+                    x = j * self.cell_plus_border
                     canvas.rectangle(
                         (x + self.border_width, y + self.border_width, x + self.cell_size, y + self.cell_size),
                         fill=self.color_filled)
