@@ -1,4 +1,7 @@
 from PIL import Image, ImageDraw
+from gameoflife_engine import GameOfLifeEngine
+
+# todo: make renderer as class with some preferences
 
 # Size
 
@@ -38,24 +41,21 @@ def draw_grid(canvas, size):
 def draw(canvas, life_state):
     for i in range(0, len(life_state)):
         for j in range(0, len(life_state[i])):
-            if life_state[i][j] == 0:
+            if life_state[i][j] == GameOfLifeEngine.CELL_DEAD:
                 pass
-            else:
+            elif life_state[i][j] == GameOfLifeEngine.CELL_ALIVE:
                 x = i * CELL_PLUS_BORDER
                 y = j * CELL_PLUS_BORDER
                 canvas.rectangle((x + BORDER_WIDTH, y + BORDER_WIDTH, x + CELL_SIZE, y + CELL_SIZE), fill=COLOR_FILLED)
 
 
-def main():
+def save_state(filename, state):
     im = Image.new(mode='RGB', size=(IMAGE_WIDTH, IMAGE_HEIGHT), color=COLOR_EMPTY)
 
     canvas = ImageDraw.Draw(im)
 
     draw_grid(canvas, im.size)
-    draw(canvas, [[1, 0, 1], [0, 1, 0], [1, 0, 1]])
+    draw(canvas, state)
 
-    im.save("temp.png", "PNG")
+    im.save("%s.png" % filename, "PNG")
 
-
-if __name__ == '__main__':
-    main()
