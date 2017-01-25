@@ -1,10 +1,12 @@
 import random
-from utils import read_file, split_str_to_ints
+from utils import read_file, split_str_to_ints, write_matrix_to_file
 
 
 class GameOfLifeEngine:
     CELL_ALIVE = 1
     CELL_DEAD = 0
+
+    HISTORY_LIMIT = 10
 
     def __init__(self, renderer, **kwargs):
 
@@ -18,7 +20,11 @@ class GameOfLifeEngine:
         self.renderer = renderer
 
     def step(self):
+
+        self.__life()
+
         self.renderer.draw_state('temp', self)
+        self.__save_to_file('temp_file2.txt')
 
     def __init_from_args(self, width, height):
         self.width = width
@@ -49,6 +55,9 @@ class GameOfLifeEngine:
 
             self.history.append(history_step)
 
+    def __life(self):
+        pass
+
     def __save_to_file(self, filename):
         file = open(filename, 'w+')
 
@@ -56,3 +65,9 @@ class GameOfLifeEngine:
 
         # todo write actual result and history
 
+        write_matrix_to_file(file, self.map)
+
+        limit = min(GameOfLifeEngine.HISTORY_LIMIT, len(self.history))
+
+        for i in range(0, limit):
+            write_matrix_to_file(file, self.history[i])
