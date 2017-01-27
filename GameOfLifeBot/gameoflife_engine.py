@@ -1,4 +1,5 @@
 import random
+import os
 from utils import read_file, split_str_to_ints, write_matrix_to_file
 
 
@@ -26,10 +27,10 @@ class GameOfLifeEngine:
         import datetime
         self.renderer.draw_state(str(datetime.datetime.now()), self)
 
-        self.__save_to_file(filename)
-
         if life_continues:
-            pass
+            self.__save_to_file(filename)
+        else:
+            os.remove(filename)
 
     def __init_from_args(self, width, height):
         self.width = width
