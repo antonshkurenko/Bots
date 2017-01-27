@@ -15,8 +15,6 @@ def main():
 
     gof.save(filename, life_continues)
 
-    print(gof.__dict__)
-
 
 if __name__ == '__main__':
     main()

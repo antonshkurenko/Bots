@@ -56,7 +56,6 @@ class GameOfLifeEngine:
             history_step = []
 
             for j in range(0, self.height):
-                print('j = %s, i = %s, i + j = %s' % (j, i, i + j))
                 history_step.append(split_str_to_ints(lines[i + j]))
 
             self.history.append(history_step)
@@ -78,8 +77,10 @@ class GameOfLifeEngine:
                                 neighbours_count == 2 and current_state[y][x] == GameOfLifeEngine.CELL_ALIVE):
                     self.map[y][x] = GameOfLifeEngine.CELL_ALIVE
 
-        return not (GameOfLifeEngine.__check_any_alive(self.map) or
-                    GameOfLifeEngine.__check_exists_in_history(self.map, self.history))
+        alive = GameOfLifeEngine.__check_any_alive(self.map)
+        exists_in_history = GameOfLifeEngine.__check_exists_in_history(self.map, self.history)
+
+        return alive and not exists_in_history
 
     def __neighbours_count(self, x, y, current_state):
 
