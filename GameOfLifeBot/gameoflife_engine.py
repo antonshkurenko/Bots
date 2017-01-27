@@ -6,7 +6,7 @@ class GameOfLifeEngine:
     CELL_ALIVE = 1
     CELL_DEAD = 0
 
-    HISTORY_LIMIT = 10
+    HISTORY_LIMIT = 100
 
     def __init__(self, renderer, **kwargs):
 
@@ -20,11 +20,16 @@ class GameOfLifeEngine:
         self.renderer = renderer
 
     def step(self):
+        return self.__life()
 
-        self.__life()
+    def save(self, filename, life_continues):
+        import datetime
+        self.renderer.draw_state(str(datetime.datetime.now()), self)
 
-        self.renderer.draw_state('temp', self)
-        self.__save_to_file('temp_file2.txt')
+        self.__save_to_file(filename)
+
+        if life_continues:
+            pass
 
     def __init_from_args(self, width, height):
         self.width = width
@@ -56,7 +61,53 @@ class GameOfLifeEngine:
             self.history.append(history_step)
 
     def __life(self):
-        pass
+
+        current_state = self.map
+
+        self.history.insert(0, current_state)
+        self.map = [[GameOfLifeEngine.CELL_DEAD for _ in
+                     range(0, self.width)] for _ in range(0, self.height)]
+
+        for y in range(0, len(current_state)):
+            for x in range(0, len(current_state[y])):
+
+                neighbours_count = self.__neighbours_count(x, y, current_state)
+
+                if neighbours_count == 3 or (
+                                neighbours_count == 2 and current_state[y][x] == GameOfLifeEngine.CELL_ALIVE):
+                    self.map[y][x] = GameOfLifeEngine.CELL_ALIVE
+
+        return not (GameOfLifeEngine.__check_any_alive(self.map) or
+                    GameOfLifeEngine.__check_exists_in_history(self.map, self.history))
+
+    def __neighbours_count(self, x, y, current_state):
+
+        count = 0
+
+        for horizontal in [-1, 0, 1]:
+            for vertical in [-1, 0, 1]:
+                if not horizontal == vertical == 0:
+                    count += current_state[(y + vertical) % self.height][(x + horizontal) % self.width]
+
+        return count
+
+    @staticmethod
+    def __check_any_alive(state):
+        for i in range(0, len(state)):
+            for j in range(0, len(state[i])):
+                if state[i][j] == GameOfLifeEngine.CELL_ALIVE:
+                    return True
+
+        return False
+
+    @staticmethod
+    def __check_exists_in_history(state, history):
+
+        for history_state in history:
+            if state == history_state:
+                return True
+
+        return False
 
     def __save_to_file(self, filename):
         file = open(filename, 'w+')

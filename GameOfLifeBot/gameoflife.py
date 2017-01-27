@@ -1,12 +1,21 @@
-import gameoflife_renderer
+import os.path
 from gameoflife_engine import GameOfLifeEngine
 from gameoflife_renderer import GameOfLifeRenderer
 
 
 def main():
-    gof = GameOfLifeEngine(GameOfLifeRenderer(), filename='temp_file.txt')
+    filename = 'history.txt'
+
+    if os.path.exists(filename):
+        gof = GameOfLifeEngine(GameOfLifeRenderer(), filename=filename)
+        life_continues = gof.step()
+    else:
+        gof = GameOfLifeEngine(GameOfLifeRenderer(), width=15, height=15)
+        life_continues = True
+
+    gof.save(filename, life_continues)
+
     print(gof.__dict__)
-    gof.step()
 
 
 if __name__ == '__main__':
