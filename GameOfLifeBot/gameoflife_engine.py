@@ -39,19 +39,30 @@ class GameOfLifeEngine:
                      range(0, width)] for _ in range(0, height)]
 
         self.history = []
+        self.generation = 0
 
     def __init_from_file(self, filename):
         lines = read_file(filename)
-        self.width, self.height = split_str_to_ints(lines[0])
+
+        current_line = 0
+
+        self.generation = int(lines[current_line])
+        current_line += 1
+
+        self.width, self.height = split_str_to_ints(lines[current_line])
+        current_line += 1
 
         self.map = []
         self.history = []
 
         # current state
-        for i in range(1, self.height + 1):
+
+        for i in range(current_line, self.height + current_line):
             self.map.append(split_str_to_ints(lines[i]))
 
-        for i in range(self.height + 1, len(lines), self.height):
+        current_line += self.height
+
+        for i in range(current_line, len(lines), self.height):
 
             history_step = []
 
@@ -76,6 +87,8 @@ class GameOfLifeEngine:
                 if neighbours_count == 3 or (
                                 neighbours_count == 2 and current_state[y][x] == GameOfLifeEngine.CELL_ALIVE):
                     self.map[y][x] = GameOfLifeEngine.CELL_ALIVE
+
+        self.generation += 1
 
         alive = GameOfLifeEngine.__check_any_alive(self.map)
         exists_in_history = GameOfLifeEngine.__check_exists_in_history(self.map, self.history)
@@ -113,6 +126,8 @@ class GameOfLifeEngine:
 
     def __save_to_file(self, filename):
         file = open(filename, 'w+')
+
+        file.write('%s\n' % self.generation)
 
         file.write('%s %s\n' % (self.width, self.height))
 
