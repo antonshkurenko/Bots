@@ -5,6 +5,7 @@ from gameoflife_renderer import GameOfLifeRenderer
 
 def main():
     filename = 'history.txt'
+    pic_filename = 'current_state.png'
 
     if os.path.exists(filename):
         gof = GameOfLifeEngine(GameOfLifeRenderer(), filename=filename)
@@ -13,8 +14,7 @@ def main():
         gof = GameOfLifeEngine(GameOfLifeRenderer(), width=15, height=15)
         life_continues = True
 
-    gof.save(filename, life_continues)
-
+    gof.save(filename, pic_filename, life_continues)
 
 if __name__ == '__main__':
     main()

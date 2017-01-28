@@ -49,4 +49,4 @@ class GameOfLifeRenderer:
         self.__draw_grid(canvas, im.size)
         self.__draw(canvas, engine.map)
 
-        im.save("%s.png" % filename, "PNG")
+        im.save("%s" % filename)

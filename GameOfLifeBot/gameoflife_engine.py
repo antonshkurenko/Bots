@@ -23,9 +23,8 @@ class GameOfLifeEngine:
     def step(self):
         return self.__life()
 
-    def save(self, filename, life_continues):
-        import datetime
-        self.renderer.draw_state(str(datetime.datetime.now()), self)
+    def save(self, filename, pic_filename, life_continues):
+        self.renderer.draw_state(pic_filename, self)
 
         if life_continues:
             self.__save_to_file(filename)
