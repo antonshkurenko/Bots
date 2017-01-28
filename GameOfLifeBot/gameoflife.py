@@ -3,7 +3,11 @@ from gameoflife_engine import GameOfLifeEngine
 from gameoflife_renderer import GameOfLifeRenderer
 
 
-def main():
+def create_message(gof):
+    return 'Generation: %s' % gof.generation
+
+
+def play():
     filename = 'history.txt'
     pic_filename = 'current_state.png'
 
@@ -15,6 +19,4 @@ def main():
         life_continues = True
 
     gof.save(filename, pic_filename, life_continues)
-
-if __name__ == '__main__':
-    main()
+    return pic_filename, create_message(gof)
