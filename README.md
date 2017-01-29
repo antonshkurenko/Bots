@@ -11,3 +11,7 @@ Everyday from 9:15 a.m. to 6:15 p.m. he plays TicTacToe against himself
 #### 3) Kyiv Weather Bot ([link](https://twitter.com/kyivweatherbot)):
 
 Everyday, every hour he shows weather in Kyiv for the next hour
+
+#### 4) Conway's Game of Life Bot ([link](https://twitter.com/botgameoflife)):
+
+Everyday, every 15 minutes it creates new generation
