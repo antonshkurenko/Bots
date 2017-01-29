@@ -34,7 +34,7 @@ streak_strings = {
 
 
 def init():
-    print('init')
+    #print('init')
 
     for i in range(0, SIZE):
         row[i] = 0
@@ -47,10 +47,10 @@ def init():
 
 
 def draw(tweet_callback):
-    print('draw')
+    #print('draw')
 
-    print('row:' + str(row))
-    print('col:' + str(col))
+    #print('row:' + str(row))
+    #print('col:' + str(col))
 
     tweet_text = ''
 
@@ -77,7 +77,7 @@ def draw(tweet_callback):
                 pass
 
             if j != SIZE - 1:
-                print('|', end='')
+                #print('|', end='')
                 tweet_text += '|'
 
         # print()
@@ -234,7 +234,7 @@ def start(tweet_callback):
             global first_bot
             first_bot = not first_bot
 
-        print('*** End of the step ***')
+        #print('*** End of the step ***')
         time.sleep(5)
 
     if result == O:
