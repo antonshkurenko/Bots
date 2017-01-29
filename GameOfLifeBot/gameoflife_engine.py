@@ -7,7 +7,7 @@ class GameOfLifeEngine:
     CELL_ALIVE = 1
     CELL_DEAD = 0
 
-    HISTORY_LIMIT = 100
+    HISTORY_LIMIT = 50
 
     def __init__(self, renderer, **kwargs):
 

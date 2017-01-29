@@ -4,7 +4,7 @@ from gameoflife import play
 
 # ====== Constants =============================================
 
-MY_BOT_ID = ''
+MY_BOT_ID = '825414146745331714'
 MY_ID = '248120243'
 
 # ====== Individual bot configuration ==========================
