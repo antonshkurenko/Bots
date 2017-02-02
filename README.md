@@ -1,6 +1,7 @@
 # My twitter bots
 
-![How to make twitter bot .png](https://github.com/tonyshkurenko/Bots/blob/master/twitter_bot.png "How to make a twitter bot .png")
+[![How to make twitter bot .png](https://github.com/tonyshkurenko/Bots/blob/master/twitter_bot.png "How to make a twitter bot .png")](https://xkcd.com/1646/)
+(From https://xkcd.com/)
 
 #### 1) Nadobranok Bot ([link](https://twitter.com/nadobranok)):
 
