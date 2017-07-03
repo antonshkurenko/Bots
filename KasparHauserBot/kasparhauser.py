@@ -34,6 +34,7 @@ class KasparHauser:
         self.updater.start_polling()
         self.updater.idle()
 
+    # region Handlers of base types
     def __handle_error(self, bot, update, error):
         print('Update "%s" caused error "%s"' % (update, error))
 
@@ -66,7 +67,6 @@ class KasparHauser:
 
         update.inline_query.answer(results)
 
-
     def __handle_callback_query(self, bot, update):
         query = update.callback_query
 
@@ -74,6 +74,7 @@ class KasparHauser:
                               chat_id=query.message.chat_id,
                               message_id=query.message.message_id)
 
+    # endregion
 
     def __help_handler(self, bot, update):
         update.message.reply_text("/help -- help\n"
@@ -81,7 +82,6 @@ class KasparHauser:
                                   "/start -- keyboard test\n"
                                   "\n"
                                   "Also inline queries")
-
 
     def __about_handler(self, bot, update):
         update.message.reply_text("Here will be about!")
@@ -97,8 +97,3 @@ class KasparHauser:
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         update.message.reply_text('Please choose:', reply_markup=reply_markup)
-
-
-
-
-

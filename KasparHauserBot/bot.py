@@ -1,6 +1,5 @@
-from kasparhauser import KasparHauser
-from keys import BOT_KEY
-
+from KasparHauserBot.kasparhauser import KasparHauser
+from KasparHauserBot.keys import BOT_KEY
 
 def main():
 
