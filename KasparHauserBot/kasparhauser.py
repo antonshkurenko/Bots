@@ -1,34 +1,41 @@
 from uuid import uuid4
 
+import logging
 from telegram import InlineKeyboardButton
 from telegram import InlineKeyboardMarkup
 from telegram import InlineQueryResultArticle
 from telegram import InputTextMessageContent
+from telegram import ParseMode
 from telegram.ext import CallbackQueryHandler
+from telegram.ext import CommandHandler
 from telegram.ext import Filters
 from telegram.ext import InlineQueryHandler
 from telegram.ext import MessageHandler
 from telegram.ext import Updater
+from telegram.ext.dispatcher import run_async
+from telegram.utils.helpers import escape_markdown
 
 
 class KasparHauser:
 
-    command_handlers = {}
-
-    def __init__(self, key):
+    def __init__(self, key, google_search):
 
         self.updater = Updater(key)
 
         self.updater.dispatcher.add_error_handler(self.__handle_error)
 
         self.updater.dispatcher.add_handler(MessageHandler(Filters.text, self.__handle_text_input))
-        self.updater.dispatcher.add_handler(MessageHandler(Filters.command, self.__handle_command_input))
         self.updater.dispatcher.add_handler(InlineQueryHandler(self.__handle_inline_query))
         self.updater.dispatcher.add_handler(CallbackQueryHandler(self.__handle_callback_query))
 
-        self.command_handlers["/help"] = self.__help_handler
-        self.command_handlers["/about"] = self.__about_handler
-        self.command_handlers["/start"] = self.__start_handler
+        self.updater.dispatcher.add_handler(CommandHandler('help', self.__help_handler))
+        self.updater.dispatcher.add_handler(CommandHandler('about', self.__about_handler))
+        self.updater.dispatcher.add_handler(CommandHandler('start', self.__start_handler))
+
+        self.updater.dispatcher.add_handler(CommandHandler('search', self.__search_handler))
+        self.updater.dispatcher.add_handler(CommandHandler('lmgtfy', self.__search_handler))
+
+        self.google_search = google_search
 
     def start(self):
         self.updater.start_polling()
@@ -36,19 +43,10 @@ class KasparHauser:
 
     # region Handlers of base types
     def __handle_error(self, bot, update, error):
-        print('Update "%s" caused error "%s"' % (update, error))
+        logging.log(logging.DEBUG, 'Update "%s" caused error "%s"' % (update, error))
 
     def __handle_text_input(self, bot, update):
         update.message.reply_text('You typed this text: {}'.format(update.message.text))
-
-    def __handle_command_input(self, bot, update):
-
-        command = self.command_handlers.get(update.message.text)
-
-        if command is not None:
-            command(bot, update)
-        else:
-            update.message.reply_text('Unknown command: %s\nUse /help, to check all available commands' % update.message.text)
 
     def __handle_inline_query(self, bot, update):
 
@@ -97,3 +95,41 @@ class KasparHauser:
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         update.message.reply_text('Please choose:', reply_markup=reply_markup)
+
+    @run_async
+    def __search_handler(self, bot, update):
+
+        result = self.google_search.search(search_term=update.message.text
+                                           .replace('/search', '', 1)
+                                           .replace('/lmgtfy', '', 1), num=5)
+
+        logging.log(logging.DEBUG, 'Search called')
+
+        search_information = result['searchInformation']
+
+        search_time = search_information['formattedSearchTime']
+        total_results = search_information['formattedTotalResults']
+
+        update.message.reply_text("Search time: %s, total results: %s" % (search_time, total_results))
+
+        spelling = result.get('spelling')
+
+        if spelling is not None:
+            corrected_spelling = spelling['correctedQuery']
+            update.message.reply_text("Corrected query: %s" % (corrected_spelling))
+
+        items = result['items']
+
+        for i, item in enumerate(items):
+            update.message.reply_text("*%d.* %s\n\n"
+                                      "%s\n\n"
+                                      "%s" % (i + 1, escape_markdown(item['title']),
+                                              escape_markdown(item['formattedUrl']),
+                                              escape_markdown(item['snippet'])),
+                                      parse_mode=ParseMode.MARKDOWN)
+
+
+
+
+
+
