@@ -1,4 +1,4 @@
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 import logging
 from telegram import InlineKeyboardButton
@@ -7,6 +7,7 @@ from telegram import InlineQueryResultArticle
 from telegram import InputTextMessageContent
 from telegram import ParseMode
 from telegram.ext import CallbackQueryHandler
+from telegram.ext import ChosenInlineResultHandler
 from telegram.ext import CommandHandler
 from telegram.ext import Filters
 from telegram.ext import InlineQueryHandler
@@ -18,6 +19,11 @@ from telegram.utils.helpers import escape_markdown
 
 class KasparHauser:
 
+    PREFIX_SEARCH = 'google_'
+
+    SEARCH_SEARCH = PREFIX_SEARCH + 'search_'
+    SEARCH_LUCKY = PREFIX_SEARCH + 'lucky_'
+
     def __init__(self, key, google_search):
 
         self.updater = Updater(key)
@@ -25,8 +31,8 @@ class KasparHauser:
         self.updater.dispatcher.add_error_handler(self.__handle_error)
 
         self.updater.dispatcher.add_handler(MessageHandler(Filters.text, self.__handle_text_input))
+
         self.updater.dispatcher.add_handler(InlineQueryHandler(self.__handle_inline_query))
-        self.updater.dispatcher.add_handler(CallbackQueryHandler(self.__handle_callback_query))
 
         self.updater.dispatcher.add_handler(CommandHandler('help', self.__help_handler))
         self.updater.dispatcher.add_handler(CommandHandler('about', self.__about_handler))
@@ -34,6 +40,8 @@ class KasparHauser:
 
         self.updater.dispatcher.add_handler(CommandHandler('search', self.__search_handler))
         self.updater.dispatcher.add_handler(CommandHandler('lmgtfy', self.__search_handler))
+
+        self.updater.dispatcher.add_handler(CallbackQueryHandler(self.__handle_callback_query))
 
         self.google_search = google_search
 
@@ -51,26 +59,95 @@ class KasparHauser:
     def __handle_inline_query(self, bot, update):
 
         query = update.inline_query.query
-        results = list()
 
-        results.append(InlineQueryResultArticle(id=uuid4(),
-                                                title="Caps",
-                                                input_message_content=InputTextMessageContent(
-                                                    query.upper())))
+        reply_markup_for_search = \
+            InlineKeyboardMarkup([[InlineKeyboardButton("Search", callback_data=self.SEARCH_SEARCH + query),
+                                   InlineKeyboardButton("I\'m feeling lucky", callback_data=self.SEARCH_LUCKY + query)]])
 
-        results.append(InlineQueryResultArticle(id=uuid4(),
-                                                title="Simple",
-                                                input_message_content=InputTextMessageContent(
-                                                    query)))
+        results = [InlineQueryResultArticle(id=uuid4(),
+                                            title='Private Google',
+                                            input_message_content=InputTextMessageContent(
+                                                'Query: %s' % query),
+                                            reply_markup=reply_markup_for_search)]
 
         update.inline_query.answer(results)
 
+    @run_async
     def __handle_callback_query(self, bot, update):
         query = update.callback_query
 
-        bot.edit_message_text(text="Selected option: %s" % query.data,
-                              chat_id=query.message.chat_id,
-                              message_id=query.message.message_id)
+        if query.inline_message_id is not None:
+
+            if query.data.startswith(self.PREFIX_SEARCH):
+
+                if self.SEARCH_SEARCH in query.data:
+                    # search
+
+                    search_query = query.data.replace(self.SEARCH_SEARCH, '', 1)
+                    bot.edit_message_text('Search query: %s' % search_query, inline_message_id=query.inline_message_id)
+
+                elif self.SEARCH_LUCKY in query.data:
+                    # lucky
+
+                    search_query = query.data.replace(self.SEARCH_LUCKY, '', 1)
+
+                    bot.edit_message_text('Lucky query: %s' % search_query, inline_message_id=query.inline_message_id)
+
+                    result = self.google_search.search(search_term=search_query, num=1)
+
+                    search_information = result['searchInformation']
+
+                    search_time = search_information['formattedSearchTime']
+                    total_results = search_information['formattedTotalResults']
+
+                    spelling = result.get('spelling')
+
+                    item = result['items'][0]
+
+                    if item is not None:
+
+                        if spelling is not None:
+                            corrected_spelling = spelling['correctedQuery']
+
+                            bot.edit_message_text('Search time: %s, total results: %s\n'
+                                                  '%s\n\n'
+                                                  '%s\n\n'
+                                                  '%s\n\n'
+                                                  '%s' % (search_time,
+                                                          total_results,
+                                                          corrected_spelling,
+                                                          item['title'],
+                                                          item['formattedUrl'],
+                                                          item['snippet']),
+                                                  inline_message_id=query.inline_message_id,
+                                                  disable_web_page_preview=True)
+
+                        else:
+                            bot.edit_message_text('Search time: %s, total results: %s\n\n'
+                                                  '%s\n\n'
+                                                  '%s\n\n'
+                                                  '%s' % (search_time,
+                                                          total_results,
+                                                          item['title'],
+                                                          item['formattedUrl'],
+                                                          item['snippet']),
+                                                  inline_message_id=query.inline_message_id,
+                                                  disable_web_page_preview=True)
+
+
+
+                else:
+                    logging.log(logging.WARN, 'Unknown search')
+
+            else:
+                logging.log(logging.WARN, 'Currently no support for this data')
+
+        elif query.message is not None:
+            bot.edit_message_text(text="Selected option: %s" % query.data,
+                                  chat_id=query.message.chat_id,
+                                  message_id=query.message.message_id)
+        else:
+            logging.log(logging.WARN, 'Nor inline, neither message')
 
     # endregion
 
@@ -83,7 +160,6 @@ class KasparHauser:
 
     def __about_handler(self, bot, update):
         update.message.reply_text("Here will be about!")
-
 
     def __start_handler(self, bot, update):
 
@@ -116,7 +192,7 @@ class KasparHauser:
 
         if spelling is not None:
             corrected_spelling = spelling['correctedQuery']
-            update.message.reply_text("Corrected query: %s" % (corrected_spelling))
+            update.message.reply_text("Corrected query: %s" % corrected_spelling)
 
         items = result['items']
 
@@ -126,10 +202,5 @@ class KasparHauser:
                                       "%s" % (i + 1, escape_markdown(item['title']),
                                               escape_markdown(item['formattedUrl']),
                                               escape_markdown(item['snippet'])),
-                                      parse_mode=ParseMode.MARKDOWN)
-
-
-
-
-
-
+                                      parse_mode=ParseMode.MARKDOWN,
+                                      disable_web_page_preview=True)
